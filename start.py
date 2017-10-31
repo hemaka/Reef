@@ -12,6 +12,7 @@ loopCount = 0
 while True:
 	temp = reef.readTemp()
 	print(temp)
+	time.sleep(1)
 	# if(temp < 25.5)
 	# 	if(heaterStatus == 'off')
 	# 		switchHeater('on')
@@ -26,4 +27,4 @@ while True:
  #    loopCount += 1
  #    if(loopCount >= 60)
  #    	postLog()
-    time.sleep(1)
+    
