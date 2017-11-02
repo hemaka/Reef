@@ -1,30 +1,30 @@
 import sys
 import time
+import os
+import glob
 import RPi.GPIO as GPIO
 import json
-from Reef import reef
+import dotenv
+import settings
+from reef import Reef
 
 os.system('modprobe w1-gpio')
 os.system('modprobe w1-therm')
 
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(int(os.environ['SWITCH_LIGHT_GPIO']), GPIO.OUT)
+
 reef = Reef()
 loopCount = 0
 while True:
-	temp = reef.readTemp()
-	print(temp)
+	reef.pullAction()
+	reef.readTemp()
+	reef.checkTemp()
+	if reef.statusChange:
+		reef.sendLog()
+	print(reef.temp, reef.lightStatus, reef.heaterStatus, reef.fansStatus)
+	loopCount += 1
+	if loopCount >= float(os.environ['REFRESH_TIME']):
+		reef.sendLog()
+		loopCount = 0
 	time.sleep(1)
-	# if(temp < 25.5)
-	# 	if(heaterStatus == 'off')
-	# 		switchHeater('on')
-	# 	if(fansStatus == 'on')
-	# 		switchFans('off')
-	# if(temp > 25.8)
-	# 	if(heaterStatus == 'on')
-	# 		switchHeater('off')
-	# 	if(fansStatus == 'off')
-	# 		switchFans('on')
-	# getAction()
- #    loopCount += 1
- #    if(loopCount >= 60)
- #    	postLog()
-    
